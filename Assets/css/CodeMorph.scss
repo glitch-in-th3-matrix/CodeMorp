@@ -1,0 +1,248 @@
+.message {
+    text-align: center;
+
+    &.success {
+        color: #02ba5a;
+    }
+
+    &.error {
+        color: #b71212;
+    }
+}
+
+.card-title {
+    text-transform: uppercase;
+}
+
+.submit-box {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+input[type='file'] {
+    padding: 0px;
+
+    &::-webkit-file-upload-button {
+        background: #ffffff90;
+        height: 100%;
+        border: none;
+        color: #000;
+    }
+}
+
+select {
+    border-radius: 5px;
+
+    option {
+        background: #ffffff3f;
+        color: #484040;
+    }
+}
+
+textarea {
+    height: 80px !important;
+}
+
+textarea::-webkit-resizer {
+    display: none;
+}
+
+textarea::-webkit-scrollbar {
+    display: none;
+}
+
+.table {
+
+    tbody tr {
+
+        td {
+            padding: .5rem 1rem !important;
+
+            &.title {
+                width: 100%;
+            }
+
+            &.question {
+                width: 70%;
+            }
+
+            &.answer {
+                width: 30%;
+            }
+
+            &.empty {
+                text-align: center;
+                color: #b71212;
+            }
+
+            .alert-icon:has(.delete-row) {
+                margin-right: 20px;
+            }
+
+            a.btn {
+                color: #fff;
+                background-color: rgba(255, 255, 255, .125);
+                border-color: rgba(255, 255, 255, .125);
+                box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+                cursor: pointer;
+
+                &:hover {
+                    color: #fff;
+                    background-color: rgba(65, 163, 178, 0.18);
+                    border-color: rgba(255, 255, 255, 0.18);
+                }
+            }
+
+            p {
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 5;
+                line-clamp: 3;
+                text-align: justify;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: normal;
+                white-space: normal;
+            }
+
+            .img-wrap {
+                height: 40px;
+                width: 40px;
+                opacity: .9;
+
+                .product-img {
+                    height: 100%;
+                    aspect-ratio: 1 / 1;
+                    object-fit: cover;
+                    object-position: top;
+                    border-radius: 3px;
+                }
+            }
+
+            .alert-icon .bi {
+
+                &.bi-pencil-square:hover {
+                    color: #14abef;
+                }
+
+                &.bi-trash:hover {
+                    color: #f5365c;
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+}
+
+.alert {
+
+    &.added,
+    &.updated {
+        background-color: #02ba5a;
+        border-color: #02ba5a;
+    }
+}
+
+.dropdown-item {
+
+    .drop-link {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+#charts-container {
+    height: 75vh;
+    padding: 0px;
+    margin: 0px;
+
+    .left {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        padding-right: 10px;
+
+        .card {
+            width: 100%;
+            margin: 0px;
+            height: 95%;
+        }
+    }
+
+    .right {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        padding: 0px;
+        padding-left: 10px;
+
+        .card {
+            display: flex;
+            flex: 1;
+            height: 95%;
+
+            .card-body {
+                height: 100%;
+                display: flex;
+                flex: 1;
+                align-items: center;
+
+                .chart-container-2 {
+                    display: flex;
+                    flex: 1;
+                }
+            }
+        }
+
+    }
+}
+
+.profile-card-2 {
+
+    .card-img-block {
+        height: fit-content;
+        padding: 20px;
+
+        img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            object-position: top;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-radius: 5px;
+        }
+    }
+
+    .card-body {
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        .profile-info-table {
+            margin-bottom: 20px;
+
+            tbody {
+
+                tr td {
+                    padding: 5px 0px !important;
+                    border-top: none;
+
+                    &:nth-child(2) {
+                        text-align: right;
+
+                        p {
+                            margin: 0px;
+                            padding: 0px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .icon-block {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
