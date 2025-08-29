@@ -44,6 +44,8 @@
             if ($e->getCode() === 1062) {
                 unset($success);
                 $message = "This material is already added";
+            } else {
+                $message = $e->getMessage();
             }
         }
     }

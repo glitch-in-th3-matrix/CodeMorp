@@ -63,6 +63,8 @@
             if ($e->getCode() === 1062) {
                 unset($success);
                 $message = "This email is already registered!";
+            } else {
+                $message = $e->getMessage();
             }
         }
     }
@@ -75,7 +77,7 @@
         $courses = $connection->query($qry_6);
     }
 
-    $qry_7 = ($type == "regulator") 
+    $qry_7 = (in_array($user_type, ["admin", "regulator"])) 
              ? "select * from {$type}s order by id desc"
              : "select * from {$type}s where department = (
                 select department from {$user_type}s where
@@ -220,7 +222,7 @@
                                                     <div class="alert-icon">
                                                         <a href="./Personnel.php?type=<?= $type ?>&id=<?= $person["id"] ?>"
                                                             title="Edit <?= ucwords($type) ?>">
-                                                            <i class="bi bi-pencil-square"></i>
+                                                            <i class="bi bi-pencil-square"></i></a>
                                                     </div>
                                                 </td>
                                                 <td>

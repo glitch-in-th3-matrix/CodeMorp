@@ -32,6 +32,7 @@
             if ($e->getCode() === 1062) {
                 unset($success);
                 $message = "Integrity constraint broken";
+            } else {
                 $message = $e->getMessage();
             }
         }

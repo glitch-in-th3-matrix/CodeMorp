@@ -17,13 +17,17 @@
         $database
     );
 
-    function cleanInput(string $input): string {
+    function cleanInput(string|array $input): string|array {
         global $connection;
-        return $connection->real_escape_string(trim($input));
+        
+        return is_array($input)
+               ? array_map("cleanInput", $input)
+               : $connection->real_escape_string(trim($input));
     }
 
     function canManage(string $type): bool {
         global $user_type;
+        
         $manage = [
             "admin" => ["regulator"],
             "regulator" => [
@@ -34,9 +38,15 @@
             ],
             "teacher" => [
                 "study_material",
-                "test_question"
+                "test_question",
+                "simulation"
             ]
         ];
+        
         return in_array($type, $manage[$user_type] ?? []);
+    }
+
+    function slugify(string $title): string {
+        return str_replace(" ", "", ucwords(strtolower($title)));
     }
 ?>

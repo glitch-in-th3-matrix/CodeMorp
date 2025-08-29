@@ -36,6 +36,8 @@
             if ($e->getCode() === 1062) {
                 unset($success);
                 $message = "This question is already added!";
+            } else {
+                $message = $e->getMessage();
             }
         }
     }

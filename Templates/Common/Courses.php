@@ -31,6 +31,8 @@
         } catch (mysqli_sql_exception $e) {
             if ($e->getCode() === 1062) {
                 $message = "This course is already added";
+            } else {
+                $message = $e->getMessage();
             }
         }
     }

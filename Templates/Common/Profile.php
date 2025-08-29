@@ -1,10 +1,57 @@
 <?php
     include_once "../Basic/Utils.php";
     
-    $success = $_GET["success"] ?? null;
+    $success = isset($_GET["success"]);
+    $notices = isset($_GET["notices"]);
 
     $qry_1 = "select * from {$user_type}s where email = '{$user_email}'";
     $user = $connection->query($qry_1)->fetch_assoc();
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        extract(array_map("cleanInput", $_POST), EXTR_OVERWRITE);
+        $photo = $_FILES["photo"];
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        $photo_location = "../../Media/{$user_type}s";
+        $photo_extension = pathinfo($photo["name"], PATHINFO_EXTENSION);
+        $photo_name = uniqid("", true) . ".{$photo_extension}";
+        $photo_path = "$photo_location/$photo_name";
+
+        $qry_2 = $password
+                 ? "update log_data set password = '$hashed_password' where email = '$user_email'"
+                 : "select 1";
+    
+        $qry_3 = ($user_type == "regulator")
+                 ? "update {$user_type}s set name = '$name', photo = '$photo_name', phone = '$phone',
+                    dob = '$dob', address = '$address' where email = '$user_email'"
+                 : "update {$user_type}s set name = '$name', photo = '$photo_name', phone = '$phone', 
+                    department = '$department', address = '$address' where email = '$user_email'";
+
+        $connection->query($qry_2);
+        $connection->query($qry_3);
+
+        @unlink("../../Media/{$user_type}s/{$user["photo"]}");
+        move_uploaded_file($photo["tmp_name"], $photo_path);
+
+        header("Location: ./Profile.php?success=true");
+        exit;
+    }
+
+    if ($user_type != "regulator") {
+        $qry_4 = "select * from departments";
+        $departments = $connection->query($qry_4);
+
+        $qry_5 = "select course, department from departments where id = {$user["department"]}";
+        $user_department = $connection->query($qry_5)->fetch_assoc();
+
+        $qry_6 = "select notifications.*, coalesce(regulators.name, teachers.name) as sender_name,
+                  coalesce(regulators.photo, teachers.photo) as sender_photo from notifications 
+                  left join regulators on notifications.sender = regulators.email
+                  left join teachers on notifications.sender = teachers.email
+                  where notifications.`to` in ('all', '{$user_type}s')
+                  and notifications.department in (0, {$user['department']}) order by id desc";
+        $notifications = $connection->query($qry_6);
+    }
 
     include_once "../Basic/Head.php";
     include_once "../Basic/Menu.php";
@@ -13,29 +60,46 @@
 <div class="content-wrapper">
     <div class="container-fluid">
 
-        <div class="row mt-3">
-            <div class="col-lg-4">
+        <?php if ($success): ?>
+            <div class="alert alert-danger alert-dismissible updated" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <div class="alert-icon">
+                    <i class="icon-info"></i>
+                </div>
+                <div class="alert-message">
+                    <span><strong>Profile Updated!</strong></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="row mt-3 profile-container">
+            <div class="col-lg-4 profile-details">
                 <div class="card profile-card-2">
                     <div class="card-img-block">
-                        <img class="img-fluid" src="../../Assets/images/People/Zoe.jpg" alt="Card image cap">
+                        <img src="../../Media/<?= "{$user_type}s" ?>/<?= $user["photo"] ?>" 
+                            class="img-fluid" alt="Card image cap">
                     </div>
                     <div class="card-body">
-                        <!-- <img src="../../Assets/images/People/Zoe.jpg" alt="profile-image" class="profile"> -->
-                        <h5 class="card-title">Mark Stern </h5>
-                        <h5 class="card-title"><span>CM-07R</span></h5>
+                        <h5 class="card-title"><?= $user["name"] ?> </h5>
+                        <h5 class="card-title"><span><?= $user["personnel_code"] ?></span></h5>
                         <table class="table table-borderless profile-info-table">
                             <tbody>
                                 <tr>
-                                    <td>DOB</td>
-                                    <td>8-05-2505</td>
-                                </tr>
-                                <tr>
                                     <td>Email</td>
-                                    <td>cate@gmail.com</td>
+                                    <td><?= $user["email"] ?></td>
                                 </tr>
                                 <tr>
                                     <td>Phone</td>
-                                    <td>8989898586</td>
+                                    <td><?= $user["phone"] ?></td>
+                                </tr>
+                                <tr>
+                                    <?php if ($user_type == "regulator"): ?>
+                                        <td>Date Of Birth</td>
+                                        <td><?= date("F j, Y", strtotime($user["dob"])) ?></td>
+                                    <?php else: ?>
+                                        <td>Department</td>
+                                        <td><?= "{$user_department["course"]} {$user_department["department"]}" ?></td>
+                                    <?php endif; ?>
                                 </tr>
                                 <tr>
                                     <td>Address</td>
@@ -53,252 +117,154 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="col-lg-8">
+            <div class="col-lg-8 profile-tabs">
                 <div class="card">
                     <div class="card-body">
-                        <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                        <ul class="nav nav-tabs nav-tabs-primary row top-icon nav-justified">
                             <li class="nav-item">
-                                <a href="javascript:void();" data-target="#profile" data-toggle="pill"
-                                    class="nav-link active"><i class="icon-user"></i> <span
-                                        class="hidden-xs">Profile</span></a>
+                                <a href="javascript:void();" data-target="#edit" data-toggle="tab"
+                                    class="nav-link <?= !$notices ? "active" : null ?>">
+                                        <i class="icon-user-follow"></i> 
+                                        <span class="hidden-xs">Edit</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="javascript:void();" data-target="#messages" data-toggle="pill"
-                                    class="nav-link"><i class="icon-envelope-open"></i> <span
-                                        class="hidden-xs">Messages</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="javascript:void();" data-target="#edit" data-toggle="pill"
-                                    class="nav-link"><i class="icon-note"></i> <span
-                                        class="hidden-xs">Edit</span></a>
-                            </li>
+                            <?php if ($user_type != "regulator"): ?>
+                                <li class="nav-item">
+                                    <a href="javascript:void();" data-target="#notifications" data-toggle="tab"
+                                        class="nav-link <?= $notices ? "active" : null ?>">
+                                            <i class="icon-bell"></i> 
+                                            <span class="hidden-xs">Notifications</span></a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                         <div class="tab-content p-3">
-                            <div class="tab-pane active" id="profile">
-                                <h5 class="mb-3">User Profile</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6>About</h6>
-                                        <p>
-                                            Web Designer, UI/UX Engineer
-                                        </p>
-                                        <h6>Hobbies</h6>
-                                        <p>
-                                            Indie music, skiing and hiking. I love the great outdoors.
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>Recent badges</h6>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">html5</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">react</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">codeply</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">angularjs</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">css3</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">jquery</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">bootstrap</a>
-                                        <a href="javascript:void();"
-                                            class="badge badge-dark badge-pill">responsive-design</a>
-                                        <hr>
-                                        <span class="badge badge-primary"><i class="fa fa-user"></i> 900
-                                            Followers</span>
-                                        <span class="badge badge-success"><i class="fa fa-cog"></i> 43
-                                            Forks</span>
-                                        <span class="badge badge-danger"><i class="fa fa-eye"></i> 245
-                                            Views</span>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <h5 class="mt-2 mb-3"><span
-                                                class="fa fa-clock-o ion-clock float-right"></span> Recent
-                                            Activity</h5>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-striped">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>Abby</strong> joined ACME Project Team in
-                                                            <strong>`Collaboration`</strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>Gary</strong> deleted My Board1 in
-                                                            <strong>`Discussions`</strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>Kensington</strong> deleted MyBoard3 in
-                                                            <strong>`Discussions`</strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>John</strong> deleted My Board1 in
-                                                            <strong>`Discussions`</strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>Skell</strong> deleted his post Look at Why
-                                                            this is.. in <strong>`Discussions`</strong>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/row-->
-                            </div>
-                            <div class="tab-pane" id="messages">
-                                <div class="alert alert-info alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <div class="alert-icon">
-                                        <i class="icon-info"></i>
-                                    </div>
-                                    <div class="alert-message">
-                                        <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-striped">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <span class="float-right font-weight-bold">3 hrs ago</span>
-                                                    Here is your a link to the latest summary report from the..
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span class="float-right font-weight-bold">Yesterday</span>
-                                                    There has been a request on your account since that was..
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span class="float-right font-weight-bold">9/10</span>
-                                                    Porttitor vitae ultrices quis, dapibus id dolor. Morbi
-                                                    venenatis lacinia rhoncus.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span class="float-right font-weight-bold">9/4</span>
-                                                    Vestibulum tincidunt ullamcorper eros eget luctus.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span class="float-right font-weight-bold">9/4</span>
-                                                    Maxamillion ais the fix for tibulum tincidunt ullamcorper
-                                                    eros.
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="edit">
-                                <form>
+                            <div class="tab-pane <?= !$notices ? "active" : null ?>" id="edit">
+                                <form method="post" enctype="multipart/form-data">
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label">First
-                                            name</label>
+                                        <label class="col-lg-3 col-form-label form-control-label"
+                                            for="name">Name</label>
                                         <div class="col-lg-9">
-                                            <input class="form-control" type="text" value="Mark">
+                                            <input type="text" name="name" class="form-control"
+                                                id="name" value="<?= $user["name"] ?>" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label">Last
-                                            name</label>
+                                        <label class="col-lg-3 col-form-label form-control-label"
+                                            for="photo">Photo</label>
                                         <div class="col-lg-9">
-                                            <input class="form-control" type="text" value="Jhonsan">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label">Email</label>
-                                        <div class="col-lg-9">
-                                            <input class="form-control" type="email" value="mark@example.com">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label">Change
-                                            profile</label>
-                                        <div class="col-lg-9">
-                                            <input class="form-control" type="file">
+                                            <input type="file" name="photo" class="form-control"
+                                                id="photo" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label
-                                            class="col-lg-3 col-form-label form-control-label">Website</label>
+                                            class="col-lg-3 col-form-label form-control-label"
+                                                for="phone">Phone</label>
                                         <div class="col-lg-9">
-                                            <input class="form-control" type="url" value="">
+                                            <input type="text" name="phone" class="form-control" 
+                                                pattern="[6-9]\d{9}" id="phone" 
+                                                value="<?= $user["phone"] ?>" required>
+                                        </div>
+                                    </div>
+                                    <?php if ($user_type == "regulator"): ?>
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                    for="dob">Date Of Birth</label>
+                                            <div class="col-lg-9">
+                                                <input type="date" name="dob" class="form-control" 
+                                                    id="dob" value="<?= $user["dob"] ?>" required>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                    for="department">Department</label>
+                                            <div class="col-lg-9">
+                                                <select name="department" class="form-control" 
+                                                    id="department" required>
+                                                    <option value="">Choose Department</option>
+                                                    <?php while ($department = $departments->fetch_assoc()): ?>
+                                                        <option value="<?= $department["id"] ?>"
+                                                            <?= $user["department"] == $department["id"]
+                                                            ? "selected" : null ?>>
+                                                            <?= "{$department["course"]} {$department["department"]}" ?>
+                                                        </option>
+                                                    <?php endwhile; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label"
+                                            for="email">Email</label>
+                                        <div class="col-lg-9">
+                                            <input type="email" name="email" class="form-control"
+                                                id="email" value="<?= $user["email"] ?>" readonly   required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label
-                                            class="col-lg-3 col-form-label form-control-label">Address</label>
+                                        <label class="col-lg-3 col-form-label form-control-label"
+                                            for="password">Password</label>
                                         <div class="col-lg-9">
-                                            <input class="form-control" type="text" value=""
-                                                placeholder="Street">
+                                            <input type="password" name="password" class="form-control"
+                                                id="password" placeholder="Password">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label"></label>
-                                        <div class="col-lg-6">
-                                            <input class="form-control" type="text" value="" placeholder="City">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input class="form-control" type="text" value=""
-                                                placeholder="State">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label
-                                            class="col-lg-3 col-form-label form-control-label">Username</label>
+                                        <label class="col-lg-3 col-form-label form-control-label"
+                                            for="address">Address</label>
                                         <div class="col-lg-9">
-                                            <input class="form-control" type="text" value="jhonsanmark">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label
-                                            class="col-lg-3 col-form-label form-control-label">Password</label>
-                                        <div class="col-lg-9">
-                                            <input class="form-control" type="password" value="11111122333">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label form-control-label">Confirm
-                                            password</label>
-                                        <div class="col-lg-9">
-                                            <input class="form-control" type="password" value="11111122333">
+                                            <textarea name="address" class="form-control" id="address"
+                                                required><?= $user["address"] ?></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-lg-3 col-form-label form-control-label"></label>
                                         <div class="col-lg-9">
-                                            <input type="reset" class="btn btn-secondary" value="Cancel">
-                                            <input type="button" class="btn btn-primary" value="Save Changes">
+                                            <input type="submit" name="update" class="btn btn-light px-5"
+                                            value="Save Changes">
                                         </div>
                                     </div>
                                 </form>
                             </div>
+                            <?php if ($user_type != "regulator"): ?>
+                                <div class="tab-pane tab-pane-2 <?= $notices ? "active" : null ?>" 
+                                    id="notifications">
+                                    <div class="notifications">
+                                        <?php if ($notifications->num_rows): ?>
+                                            <?php while ($notification = $notifications->fetch_assoc()): ?>
+                                                <div class="alert notification" data-title="<?= $notification["title"] ?>"
+                                                    data-message="<?= $notification["message"] ?>"
+                                                    data-attachment="<?= $notification["attachment"] ?>" role="alert">
+                                                    <div class="alert-icon">
+                                                        <i class="icon-info"></i>
+                                                    </div>
+                                                    <div class="img-wrap">
+                                                        <img 
+                                                            src="../../Media/<?= $notification["from"] ?>/<?= $notification["sender_photo"] ?>" 
+                                                            alt="Sender Photo"
+                                                        />
+                                                    </div>
+                                                    <p class="sender"><?= $notification["sender_name"] ?></p>
+                                                    <p class="title"><?= $notification["title"] ?></p>
+                                                </div>
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                                <div class="alert empty">
+                                                    <p>No Notifications !!</p>
+                                                </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="overlay toggle-menu"></div>

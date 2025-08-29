@@ -14,6 +14,7 @@
             if (password_verify($password, $user["password"])) {
                 $_SESSION["user_email"] = $email;
                 $_SESSION["user_type"] = $user["user_type"];
+                
                 header("Location: ./Index.php");
                 exit;
             }
@@ -26,7 +27,8 @@
 ?>
 
 <?php if ($invalid ?? null): ?>
-    <div id="flash-message" data-message="Invalid Email or Password"></div>
+    <div id="flash-message" data-icon="error" data-title="OOPS.."
+        data-message="Invalid Email or Password"></div>
 <?php endif ?>
 
 <div id="wrapper">

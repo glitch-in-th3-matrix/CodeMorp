@@ -39,6 +39,9 @@ select option {
 textarea {
   height: 80px !important;
 }
+textarea.short {
+  height: 40px !important;
+}
 
 textarea::-webkit-resizer {
   display: none;
@@ -60,6 +63,13 @@ textarea::-webkit-scrollbar {
 .table tbody tr td.answer {
   width: 30%;
 }
+.table tbody tr td.simulation-description {
+  width: 60%;
+}
+.table tbody tr td.simulation-description p {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
 .table tbody tr td.empty {
   text-align: center;
   color: #b71212;
@@ -69,21 +79,21 @@ textarea::-webkit-scrollbar {
 }
 .table tbody tr td a.btn {
   color: #fff;
-  background-color: rgba(255, 255, 255, 0.125);
-  border-color: rgba(255, 255, 255, 0.125);
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background-color: rgba(255, 255, 255, 0.1254901961);
+  border-color: rgba(255, 255, 255, 0.1254901961);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.0745098039);
   cursor: pointer;
 }
 .table tbody tr td a.btn:hover {
   color: #fff;
-  background-color: rgba(65, 163, 178, 0.18);
-  border-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(65, 163, 178, 0.1803921569);
+  border-color: rgba(255, 255, 255, 0.1803921569);
 }
 .table tbody tr td p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
-  line-clamp: 3;
+  line-clamp: 5;
   text-align: justify;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -109,12 +119,77 @@ textarea::-webkit-scrollbar {
 }
 .table tbody tr td .alert-icon .bi.bi-trash:hover {
   color: #f5365c;
-  transform: scale(1.1);
+}
+.table tbody tr td .alert-icon .bi.bi-image:hover {
+  color: #36f572;
+}
+
+.brand-logo {
+  padding-left: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.topbar-nav .navbar .navbar-nav .nav-item .nav-link .fa-bell-o:hover {
+  color: #06E706;
+}
+.topbar-nav .navbar .navbar-nav .nav-item .nav-link .fa-envelope-open-o:hover {
+  color: #e7dc06;
 }
 
 .alert.added, .alert.updated {
   background-color: #02ba5a;
   border-color: #02ba5a;
+}
+.alert.notification {
+  padding: 5px 0px;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2980392157);
+  cursor: pointer;
+}
+.alert.notification:hover {
+  background: rgba(0, 0, 0, 0.5019607843);
+}
+.alert.notification .img-wrap {
+  width: 50px;
+  height: 50px;
+}
+.alert.notification .img-wrap img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: top;
+     object-position: top;
+  border-radius: 50%;
+}
+.alert.notification p {
+  margin: 0px 15px;
+  font-size: 17px;
+}
+.alert.notification p.sender {
+  width: 130px;
+  width: 21%;
+}
+.alert.notification p.title {
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+.alert.empty {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2980392157);
+  margin: auto;
+}
+.alert.empty p {
+  margin: 0px;
+  font-size: 20px;
+  color: #b71212;
 }
 
 .dropdown-item .drop-link {
@@ -198,4 +273,532 @@ textarea::-webkit-scrollbar {
 .profile-card-2 .card-body .icon-block {
   display: flex;
   justify-content: center;
+}
+.profile-card-2 .card-body .icon-block a i {
+  transition: all 0.2s ease;
+}
+.profile-card-2 .card-body .icon-block a i:hover {
+  transform: scale(1.25);
+  text-shadow: 1px 1px 1px #14abef;
+}
+
+.profile-container {
+  display: flex;
+  align-items: stretch;
+}
+.profile-container .profile-details,
+.profile-container .profile-tabs {
+  display: flex;
+  flex-direction: column;
+}
+.profile-container .profile-tabs .card {
+  flex: 1;
+  max-height: 98vh;
+}
+.profile-container .profile-tabs .card .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: unset;
+  height: 100%;
+}
+.profile-container .profile-tabs .card .card-body .tab-content {
+  height: 90.4%;
+  flex: 0 1 1;
+  display: flex;
+}
+.profile-container .profile-tabs .card .card-body .tab-content .tab-pane {
+  width: 100%;
+}
+.profile-container .profile-tabs .card .card-body .tab-content .tab-pane-2 {
+  width: 100%;
+  height: 100%;
+  padding-right: 15px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.profile-container .profile-tabs .card .card-body .tab-content .tab-pane-2::-webkit-scrollbar {
+  width: 10px;
+}
+.profile-container .profile-tabs .card .card-body .tab-content .tab-pane-2::-webkit-scrollbar-track {
+  background: rgba(195, 187, 187, 0.2196078431);
+  border-radius: 3px;
+}
+.profile-container .profile-tabs .card .card-body .tab-content .tab-pane-2::-webkit-scrollbar-thumb {
+  background: rgba(195, 187, 187, 0.4941176471);
+  border-radius: 3px;
+}
+
+.simulation-container {
+  display: flex;
+  align-items: stretch;
+}
+.simulation-container .simulation-tabs .card .card-body .nav .nav-item a {
+  padding: 0px 0px 5px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper {
+  min-height: calc(100vh - 320px);
+  padding: 15px 5%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 40px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper .description-wrap p {
+  text-indent: 50px;
+  text-align: justify;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper .code-wrap pre code.hljs {
+  padding: 60px;
+  background: rgba(0, 0, 0, 0.7058823529);
+  border-radius: 5px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper .code-wrap pre code.hljs span {
+  font-size: 13px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper .steps-wrap ul {
+  list-style: decimal;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .simulation-wrapper .steps-wrap ul li {
+  margin: 10px 0px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper {
+  min-height: calc(100vh - 320px);
+  width: 100%;
+  display: flex;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.bubble-sort-wrapper .array-wrapper, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.selection-sort-wrapper .array-wrapper, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.insertion-sort-wrapper .array-wrapper, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.merge-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.merge-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.merge-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.merge-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.merge-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.merge-sort-wrapper .array-wrapper {
+  margin: 20px;
+  align-items: flex-end;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.bubble-sort-wrapper .array-wrapper .array-item, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.selection-sort-wrapper .array-wrapper .array-item, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.insertion-sort-wrapper .array-wrapper .array-item, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.merge-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.merge-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.merge-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.merge-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.merge-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.merge-sort-wrapper .array-wrapper .array-item {
+  width: 30px;
+  min-width: unset;
+  height: 300px;
+  align-items: flex-start;
+  border-radius: 2px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.bubble-sort-wrapper .array-builder-wrap, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.selection-sort-wrapper .array-builder-wrap, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.insertion-sort-wrapper .array-builder-wrap, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.merge-sort-wrapper .array-builder-wrap {
+  margin: 30px 0px 0px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.bubble-sort-wrapper .controls-wrap .controls, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.selection-sort-wrapper .controls-wrap .controls, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.insertion-sort-wrapper .controls-wrap .controls, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper.merge-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper.merge-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper.merge-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper.merge-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper.merge-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper.merge-sort-wrapper .controls-wrap .controls {
+  justify-content: center;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper {
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 100%;
+  margin: 10px 0px 50px;
+  padding: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item {
+  min-width: 50px;
+  height: 50px;
+  padding: 0px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.6078431373);
+  border-radius: 5px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.not-found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.not-found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.not-found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.not-found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.not-found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.not-found {
+  background: rgba(1, 1, 1, 0.3764705882);
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.not-found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.not-found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.not-found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.not-found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.not-found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.not-found span {
+  color: rgba(255, 255, 255, 0.7333333333);
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.found,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.found {
+  background: #FFFFFF;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.found span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.found span {
+  color: #02ba5a;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.min, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.sorted,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.min,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.sorted,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.min,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.sorted,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.min,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.sorted,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.min,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.sorted,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.min,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.sorted {
+  background: #FFFFFF;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.min span, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.sorted span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.min span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.sorted span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.min span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.sorted span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.min span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.sorted span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.min span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.sorted span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.min span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.sorted span {
+  color: rgba(0, 0, 0, 0.4431372549);
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.comparing, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.key, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.merged,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.comparing,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.key,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.merged,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.comparing,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.key,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.merged,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.comparing,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.key,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.merged,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.comparing,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.key,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.merged,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.comparing,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.key,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.merged {
+  background: #92F9BD;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.comparing span, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.key span, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.merged span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.comparing span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.key span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.merged span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.comparing span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.key span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.merged span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.comparing span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.key span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.merged span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.comparing span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.key span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.merged span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.comparing span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.key span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.merged span {
+  color: rgba(0, 0, 0, 0.2784313725);
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.split-left,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.split-left,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.split-left,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.split-left,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.split-left,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.split-left {
+  background: #14abef;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.split-right,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.split-right,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.split-right,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.split-right,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.split-right,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.split-right {
+  background: #92F9BD;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item.split-right span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item.split-right span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item.split-right span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item.split-right span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item.split-right span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item.split-right span {
+  color: rgba(0, 0, 0, 0.2784313725);
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-wrapper .array-item span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-wrapper .array-item span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-wrapper .array-item span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-wrapper .array-item span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-wrapper .array-item span,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-wrapper .array-item span {
+  font-size: 18px;
+  font-weight: bold;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap {
+  width: 60%;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .controls,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .array-builder,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .controls {
+  display: flex;
+  gap: 10px;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button, .simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .controls input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .array-builder input[type=number]::-webkit-outer-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-inner-spin-button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .controls input[type=number]::-webkit-outer-spin-button {
+  display: none;
+}
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .linear-search-wrapper .controls-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .binary-search-wrapper .controls-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .bubble-sort-wrapper .controls-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .selection-sort-wrapper .controls-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .insertion-sort-wrapper .controls-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .array-builder-wrap .controls button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .array-builder button,
+.simulation-container .simulation-tabs .card .card-body .tab-content .visualization-wrapper .merge-sort-wrapper .controls-wrap .controls button {
+  width: -moz-fit-content;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.nav-tabs.nav-tabs-primary .nav-item {
+  flex: 0 0 50%;
+}
+
+button.swal2-confirm {
+  min-width: 100px;
+}
+button.swal2-confirm:focus {
+  box-shadow: none;
+  border: none;
+}
+
+form .steps-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  -moz-column-gap: 10px;
+       column-gap: 10px;
+}
+form .steps-wrap .form-group {
+  flex: 1;
+  min-width: 70%;
+  margin: 0px;
+}
+form .steps-wrap .form-group label {
+  margin: 0px;
+}
+form .steps-wrap .form-group input {
+  margin-top: 10px;
+}
+form .steps-wrap .plus-wrap {
+  position: relative;
+  bottom: 1px;
+  width: 5%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+form .steps-wrap .plus-wrap .btn {
+  color: #FFF;
+  background: rgba(255, 255, 255, 0.1254901961);
+  border-color: rgba(255, 255, 255, 0.1254901961);
+}
+form .steps-wrap .plus-wrap .btn:hover {
+  background: rgba(255, 255, 255, 0.1803921569);
+  border: rgba(255, 255, 255, 0.1803921569);
 }/*# sourceMappingURL=CodeMorph.css.map */
