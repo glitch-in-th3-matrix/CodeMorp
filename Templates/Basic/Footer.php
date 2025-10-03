@@ -45,7 +45,7 @@
     <script src="../../Assets/js/bootstrap.min.js"></script>
     <script src="../../Assets/plugins/simplebar/js/simplebar.js"></script>
     <script src="../../Assets/js/sidebar-menu.js"></script>
-    <script src="../../Assets/js/jquery.loading-indicator.js"></script>
+    <!-- <script src="../../Assets/js/jquery.loading-indicator.js"></script> -->
     <script src="../../Assets/js/app-script.js"></script>
     <script src="../../Assets/js/chart.min.js"></script>
     <script src="../../Assets/js/pace.min.js"></script>

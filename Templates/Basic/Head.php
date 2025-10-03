@@ -9,7 +9,7 @@
         <title>CodeMorph</title>
         <link href="../../Assets/css/pace.min.css" rel="stylesheet"/>
         <link href="../../Assets/images/logo-icon.png" rel="icon" type="image/x-icon">
-        <link href="../../Assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
+        <!-- <link href="../../Assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/> -->
         <link href="../../Assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
         <link href="../../Assets/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="../../Assets/css/bootstrap-icons.css" rel="stylesheet"/>

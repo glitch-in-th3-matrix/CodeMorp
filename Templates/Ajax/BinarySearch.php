@@ -14,7 +14,8 @@
     <div class="array-builder-wrap">
         <label for="array-input">Array (Space Separated)</label>
         <div class="array-builder">
-            <input type="text" class="form-control" id="array-input">
+            <input type="text" class="form-control" 
+                id="array-input" value="1 2 3 4 5 6 7 8 9 10">
             <button class="btn btn-light" id="bs-build-array">Build Array</button>
         </div>
     </div>

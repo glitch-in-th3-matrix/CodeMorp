@@ -12,9 +12,7 @@
 
 <div class="content-wrapper">
     <div class="container-fluid">
-
         <div class="row mt-3 simulation-container">
-
             <div class="col-lg-12 simulation-tabs">
                 <div class="card">
                     <div class="card-body">
@@ -34,7 +32,7 @@
                             </li>
                         </ul>
                         <div class="tab-content p-3">
-                            <div class="tab-pane aactive" id="details">
+                            <div class="tab-pane active" id="details">
                                 <div class="simulation-wrapper">
                                     <div class="description-wrap">
                                         <h4><?= $simulation["title"] ?></h4>
@@ -56,7 +54,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane tab-pane-2 active" id="visualization">
+                            <div class="tab-pane tab-pane-2" id="visualization">
                                 <div class="visualization-wrapper" data-visualization="<?= slugify($simulation["title"]) ?>">
                                 </div>
                             </div>
@@ -65,7 +63,6 @@
                 </div>
             </div>
         </div>
-
         <div class="overlay toggle-menu"></div>
     </div>
 </div>

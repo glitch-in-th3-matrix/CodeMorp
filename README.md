@@ -2,17 +2,21 @@ CodeMorph is an interactive data structures and algorithms visualizer built with
 It lets you explore how algorithms work step‑by‑step with rich animations, diagrams, and explanatory details.
 Designed for students, educators, and curious coders, CodeMorph makes abstract concepts visual, dynamic, and easy to grasp.
 
+
+
 Features
 
-📊 Visualizes popular data structures (arrays, linked lists, stacks, queues, trees, graphs, etc.)
+Visualizes popular data structures (arrays, linked lists, stacks, queues, trees, graphs, etc.)
 
-⚡ Step‑by‑step algorithm animations (sorting, searching, traversals, and more)
+Step‑by‑step algorithm animations (sorting, searching, traversals, and more)
 
-💾 Fetches algorithm details from a database for easy updates and expansions
+Fetches algorithm details from a database for easy updates and expansions
 
-🔄 Tabbed interface for switching between simulations without page reloads
+Tabbed interface for switching between simulations without page reloads
 
-🎯 Focused on clarity, interactivity, and learning
+Focused on clarity, interactivity, and learning
+
+
 
 Tech Stack
 

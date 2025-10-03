@@ -2,7 +2,8 @@
     <div class="array-builder-wrap">
         <label for="array-input">Array (Space Separated)</label>
         <div class="array-builder">
-            <input type="text" class="form-control" id="array-input">
+            <input type="text" class="form-control" 
+                id="array-input" value="12 4 9 2 14 7 5 15 1 11 6 8 3 13 10">
             <button class="btn btn-light" id="sort-build-array">Build Array</button>
         </div>
     </div>
