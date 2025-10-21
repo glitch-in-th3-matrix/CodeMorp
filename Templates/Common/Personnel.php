@@ -205,7 +205,10 @@
                             <tbody>
                                 <?php if ($personnel->num_rows): ?>
                                     <?php while ($person = $personnel->fetch_assoc()): ?>
-                                        <tr>
+                                        <tr 
+                                            <?php if($type == "student"): ?>
+                                                data-student-id="<?= $person["id"] ?>"
+                                            <?php endif; ?>>
                                             <td><?= $person["personnel_code"] ?></td>
                                             <td>
                                                 <div class="img-wrap">

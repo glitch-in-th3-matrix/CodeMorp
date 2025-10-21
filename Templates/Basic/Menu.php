@@ -33,6 +33,12 @@
                             <span>Regulators</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="../Common/Simulations.php">
+                            <i class="zmdi zmdi-lamp"></i> 
+                            <span>Simulations</span>
+                        </a>
+                    </li>
                 <?php elseif ($user_type == "regulator"): ?>
                     <li>
                         <a href="../Common/Courses.php">
@@ -95,18 +101,37 @@
                             <span>Learning Canvas</span>
                         </a>
                     </li>
+                <?php elseif ($user_type == "student"): ?>
+                    <li>
+                        <a href="../Common/StudyMaterials.php">
+                            <i class="zmdi zmdi-collection-text"></i> 
+                            <span>Study Materials</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../Common/TestQuestions.php">
+                            <i class="zmdi zmdi-assignment"></i> 
+                            <span>Test Questions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../Students/Test.php">
+                            <i class="zmdi zmdi-library"></i> 
+                            <span>Test</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../Common/Simulations.php">
+                            <i class="zmdi zmdi-lamp"></i> 
+                            <span>Learning Canvas</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
             <?php else: ?>
                 <li>
                     <a href="../Common/Login.php">
                         <i class="zmdi zmdi-lock-open"></i> 
                         <span>Login</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="../Common/Register.php">
-                        <i class="zmdi zmdi-account-circle"></i> 
-                        <span>Register</span>
                     </a>
                 </li>
             <?php endif; ?>
@@ -125,14 +150,13 @@
 
             <ul class="navbar-nav align-items-center right-nav-link  <?= $user_type ? null : 'd-none' ?>">
                 <?php if (in_array($user_type, ["teacher", "student"])): ?>
-                    <li class="nav-item dropdown-lg">
-                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" 
-                            data-toggle="dropdown" href="javascript:void();">
-                            <i class="fa fa-envelope-open-o"></i></a>
+                    <li class="nav-item" title="Chat">
+                        <a class="nav-link waves-effect" href="../Common/Chat.php">
+                            <i class="bi bi-chat-right-dots"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link waves-effect" href="Profile.php?notices=true">
-                            <i class="fa fa-bell-o"></i></a>
+                    <li class="nav-item" title="Notifications">
+                        <a class="nav-link waves-effect" href="../Common/Profile.php?notices=true">
+                            <i class="bi bi-calendar2-event"></i></a>
                     </li>
                 <?php endif; ?>
                 <li class="nav-item">

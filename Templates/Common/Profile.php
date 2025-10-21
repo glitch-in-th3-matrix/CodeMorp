@@ -103,7 +103,7 @@
                                 </tr>
                                 <tr>
                                     <td>Address</td>
-                                    <td>Ruby Nagar, West Fort, Kerala</td>
+                                    <td><?= $user["address"] ?></td>
                                 </tr>
                             </tbody>
                         </table>

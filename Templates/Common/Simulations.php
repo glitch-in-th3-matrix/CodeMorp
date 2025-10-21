@@ -11,15 +11,15 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        extract(array_map("cleanInput", $_POST), EXTR_OVERWRITE);        
+        extract(array_map("cleanInput", $_POST), EXTR_OVERWRITE);
         $steps = json_encode(
             array_values(array_filter(
-                $steps, 
+                $steps,
                 fn($step) => $step !== ""
             )), 
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
-   
+
         try {
             if (isset($_POST["add"])) {
                 $qry_2 = "insert into simulations values ('', '$title', '$description', '$code',
@@ -48,11 +48,11 @@
     $qry_3 = $user_type == "admin"
              ? "select * from simulations where status = 0"
              : ($user_type == "teacher"
-                ? "select * from simulations where uploaded_by = '$user_email'"
+                ? "select * from simulations where uploaded_by = '$user_email' and status = 1"
                 : "select simulations.* from simulations
                    join teachers on simulations.uploaded_by = teachers.email
                    join students on teachers.department = students.department
-                   where students.email = '$user_email'");
+                   where students.email = '$user_email' and simulations.status = 1");
     $simulations = $connection->query($qry_3);
 
     include_once "../Basic/Head.php";
@@ -149,7 +149,7 @@
                                     <th>Title</th>
                                     <th>Description</th>
                                     <th></th>
-                                    <?php if (canManage("simulation")): ?>
+                                    <?php if (canManage("simulation") || $user_type == "admin"): ?>
                                         <th></th>
                                         <th></th>
                                     <?php endif; ?>
@@ -190,11 +190,27 @@
                                                     </div>
                                                 </td>
                                             <?php endif; ?>
+                                            <?php if ($user_type == "admin"): ?>
+                                                <td>
+                                                    <div class="alert-icon">
+                                                        <a href="#" class="simulation-status" data-status="1"
+                                                            data-id="<?= $simulation["id"] ?>" title="Approve">
+                                                            <i class="bi bi-check-circle-fill"></i></a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="alert-icon">
+                                                        <a href="#" class="simulation-status" data-status="2"
+                                                            data-id="<?= $simulation["id"] ?>" title="Reject">
+                                                            <i class="bi bi-x-circle-fill"></i></a>
+                                                    </div>
+                                                </td>
+                                            <?php endif ?>
                                         </tr>
                                     <?php endwhile; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5" class="empty">No Simulations Added!</td>
+                                        <td colspan="5" class="empty">No Simulations!</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

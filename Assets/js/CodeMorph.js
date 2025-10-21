@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    // Show Password
+    // Toggle Password Visibility
     $("#show-password").on("change", (event) => {
         $("#password-input").attr(
             "type",
@@ -7,44 +7,46 @@ $(document).ready(() => {
         );
     });
 
-    // PopUp Helper Function
+
+    /**
+     * Shows a PopUp with optional attachment
+     * 
+     * @param {'success' | 'error' | 'warning' | 'info' | 'question'} icon 
+     * @param {string} title 
+     * @param {string} message 
+     * @param {string} [attachment=null] 
+     * @param {boolean} [escape=true] 
+     * @returns {Promise<import('sweetalert2).SweerAlertResult<any>>;}
+     */
     const showPopUp = (
-        icon, 
-        title, 
-        message, 
-        attachment=null, 
-        escape=true
+        icon,
+        title,
+        message,
+        attachment = null,
+        escape = true
     ) => {
         isError = icon === "error";
 
-        Swal.fire({
+        return Swal.fire({
             icon: icon,
             title: title,
             text: message,
             background: isError ? "#000000E6" : "#fffffff8",
             iconColor: isError ? "red" : "#2196F3",
             color: isError ? "#FFF" : "#000",
+            showConfirmButton: escape,
             confirmButtonColor: isError ? "#B71919FF" : "#2196F3",
             showDenyButton: !!attachment,
             denyButtonText: "Download",
             denyButtonColor: "green",
             allowOutsideClick: escape,
             allowEscapeKey: escape,
-            showCancelButton: !escape
-        })
-            .then((result) => {
-                if (result.isDenied && attachment) {
-                    const $a = $("<a>")
-                        .attr("href", `../../Media/Attachments/${attachment}`)
-                        .attr("download", "")
-                        .css("display", "none");
-
-                    $("body").append($a);
-                    $a[0].click();
-                    $a.remove();
-                }
-            });
+            showCancelButton: !escape,
+            cancelButtonColor: "#B71919FF",
+            cancelButtonText: "Submit"
+        });
     };
+
 
     // Flash Message
     const $flashMessage = $("#flash-message");
@@ -53,6 +55,7 @@ $(document).ready(() => {
         var { icon, title, message } = $flashMessage.data();
         showPopUp(icon, title, message);
     }
+
 
     // Open Notification
     var $notifications = $(".alert.notification");
@@ -63,11 +66,29 @@ $(document).ready(() => {
             var message = $(this).data("message");
             var attachment = $(this).data("attachment");
 
-            showPopUp("info", title, message, attachment);
+            showPopUp("info", title, message, attachment)
+                .then((result) => {
+                    if (result.isDenied && attachment) {
+                        const $a = $("<a>")
+                            .attr("href", `../../Media/Attachments/${attachment}`)
+                            .attr("download", "")
+                            .css("display", "none");
+
+                        $("body").append($a);
+                        $a[0].click();
+                        $a.remove();
+                    }
+                });
         });
     }
 
-    // Confirmbox
+
+    /**
+     * Deletion Confirm Box
+     * 
+     * @param {string} itemName 
+     * @returns {Promise<import('sweetalert2').SweetAlertResult<any>>}
+     */
     const confirmDelete = (itemName) => {
         return Swal.fire({
             title: `Delete ${itemName.replace(/_/g, " ")}`,
@@ -76,12 +97,13 @@ $(document).ready(() => {
             iconColor: "red",
             showCancelButton: true,
             background: "#000000E6",
-            color: "#FFF",
+            color: "#FFFFFF",
             confirmButtonColor: "#B71919FF",
             cancelButtonColor: "#4b5563",
             confirmButtonText: "Yes, Delete It!"
         });
     }
+
 
     // Delete Item
     $(document).on("click", ".delete-item", (e) => {
@@ -102,7 +124,7 @@ $(document).ready(() => {
                     },
                     dataType: "json",
                     success: (response) => {
-                        if (response.status == "success") {
+                        if (response.status === "success") {
                             $this.closest("tr").remove();
                             Swal.fire("Deleted!", response.message, "success");
                         } else {
@@ -117,7 +139,82 @@ $(document).ready(() => {
         });
     });
 
-    // Label Shortener Helper Function
+
+    // Handle Simulation Status
+    $(document).on("click", ".simulation-status", (e) => {
+        e.preventDefault();
+
+        const $this = $(e.currentTarget);
+        const status = $this.data("status");
+        const id = $this.data("id");
+        const approve = status == 1;
+
+        Swal.fire({
+            title: `${approve ? "Approve" : "Reject"} simulation`,
+            text: "This action can't be undone",
+            icon: approve ? "success" : "warning",
+            iconColor: approve ? "#2196F3" : "#B71919FF",
+            showCancelButton: true,
+            background: approve ? "#FFFFFF" : "#000000E6",
+            color: approve ? "#000000" : "#FFFFFF",
+            confirmButtonColor: approve ? "#2196F3" : "#B71919FF",
+            cancelButtonColor: "#4B5563",
+            confirmButtonText: "Yes"
+        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "../../Templates/Ajax/SimulationStatus.php",
+                        method: "POST",
+                        data: {
+                            status: status,
+                            id: id
+                        },
+                        dataType: "json",
+                        success: (response) => {
+                            if (response.status == "success") {
+                                $this.closest("tr").remove();
+                                showPopUp(
+                                    "success",
+                                    `Simulation ${approve ? "Approved" : "Rejected"}`,
+                                    response.message
+                                );
+                            } else {
+                                showPopUp(
+                                    "error",
+                                    "Error!",
+                                    response.message
+                                );
+                            }
+                        },
+                        error: () => {
+                            showPopUp(
+                                "error",
+                                "OOPS!",
+                                "Server Error. Try Again"
+                            );
+                        }
+                    });
+                }
+            });
+    });
+
+
+    // Student Details Redirect
+    $("tr[data-student-id]").on("click", (e) => {
+        if (!$(e.target).closest("a").length) {
+            const studentId = $(e.currentTarget).data("student-id");
+            window.location.href = `../../Templates/Common/Student.php?id=${studentId}`;
+        }
+    });
+
+
+    /**
+     * Shortens a chart label
+     * 
+     * @param {string} label 
+     * @returns {string}
+     */
     function shortenLabel(label) {
         var words = label.split(" ");
         var firstWord = words[0];
@@ -126,7 +223,13 @@ $(document).ready(() => {
         return `${firstWord} ${initials}`;
     }
 
-    // Generate Shades Of White
+
+    /**
+     * Generates an array of shades of white
+     * 
+     * @param {number} count 
+     * @returns {string[]}
+     */
     function generateWhiteShades(count) {
         var shades = [];
         var step = 0.8 / (count - 1);
@@ -139,7 +242,21 @@ $(document).ready(() => {
         return shades;
     }
 
-    // Chart Creator Helper Function
+
+    /**
+     * Creates a chart.js on a given canvas element
+     * 
+     * @param {string} id 
+     * @param {'line'|'bar'|'pie'|'doughnut'|'radar'|'polarArea'|'bubble'|'scatter'} type 
+     * @param {string[]} labels 
+     * @param {number[]} data 
+     * @param {string|string[]} backgroundColor 
+     * @param {string} label
+     * @param {boolean} [isCurved=false] 
+     * @param {string|null} [symbol=null]   
+     * @param {number|boolean} [startAtZero=false] 
+     * @returns {import('chart.js').Chart;}
+     */
     function createChart(
         id,
         type,
@@ -148,7 +265,8 @@ $(document).ready(() => {
         backgroundColor,
         label,
         isCurved = false,
-        symbol = null
+        symbol = null,
+        startAtZero = false
     ) {
         const ctx = document.getElementById(id).getContext('2d');
 
@@ -182,6 +300,7 @@ $(document).ready(() => {
                         }
                     },
                     y: {
+                        min: startAtZero !== false ? startAtZero : undefined,
                         ticks: {
                             color: '#ddd'
                         },
@@ -209,6 +328,7 @@ $(document).ready(() => {
         });
     }
 
+
     // Revenue Chart
     const $revenueChart = $("#revenue-chart");
 
@@ -227,6 +347,7 @@ $(document).ready(() => {
             "₹"
         );
     }
+
 
     // Departments-Students Chart
     const $departmentsChart = $("#departments-chart");
@@ -248,6 +369,28 @@ $(document).ready(() => {
         );
     }
 
+
+    // Exam Chart
+    const $testsChart = $("#tests-chart");
+
+    if ($testsChart.length) {
+        var marks = $testsChart.data("marks");
+        var tests = marks.map((element, index) => `Test ${index + 1}`);
+
+        createChart(
+            "tests-chart",
+            "line",
+            tests,
+            marks,
+            "#FFF",
+            "Score",
+            true,
+            null,
+            0
+        );
+    }
+
+
     // Add Visualization Step Input
     $(".add-step").on("click", (e) => {
         var formGroup = `
@@ -267,10 +410,12 @@ $(document).ready(() => {
         $newInput.focus();
     });
 
+
     //Sanitize Array Inputs
     $(document).on("input", "#array-input, #array-element, #array-index", function () {
         this.value = this.value.replace(/[^0-9\s]/g, "");
     });
+
 
     // Get Visualization
     var $visualizationWrapper = $('.visualization-wrapper');
@@ -287,7 +432,13 @@ $(document).ready(() => {
             "sqrt"
         ]);
 
-        // Infix Expression Validator
+
+        /**
+         * Infix Expression Validator
+         * 
+         * @param {string} expression 
+         * @returns {string|boolean}
+         */
         function isValidInfix(expression) {
             if (!expression.length) return false;
 
@@ -311,7 +462,13 @@ $(document).ready(() => {
             return expression;
         }
 
-        // Postfix Expression Validator
+
+        /**
+         * Postfix Expression Validator
+         * 
+         * @param {string} expression 
+         * @returns {string|boolean|undefined}
+         */
         function isValidPostfix(expression) {
             if (!expression) return;
 
@@ -337,7 +494,13 @@ $(document).ready(() => {
             return stackCount === 1 ? tokens.join(" ") : false;
         }
 
-        // Expression Tokenizer Helper Function
+
+        /**
+         * Expression Tokenizer Helper Function
+         * 
+         * @param {string} expression 
+         * @returns {string[]}
+         */
         function tokenize(expression) {
             const regex = /\s*([A-Za-z]+|\d+\.?\d*|[+\-*/^()]|\S)\s*/g;
             const tokens = [];
@@ -350,7 +513,15 @@ $(document).ready(() => {
             return tokens;
         }
 
-        // Build Array Helper Function
+
+        /**
+         * Array Builder Helper Function
+         * 
+         * @param {"search"|"sort"|"1D"|"stack"|"queue"} mode 
+         * @param {boolean} checkSorted 
+         * @param {number} max 
+         * @returns {number[]|null}
+         */
         function buildArray(mode, checkSorted = false, max = 20) {
             var $arrayWrapper = $(".array-wrapper");
             var $input = $("#array-input");
@@ -425,7 +596,12 @@ $(document).ready(() => {
             return array;
         }
 
-        // Build Matrix Helper Function
+
+        /**
+         *  Matrix Builder Helper Function
+         * 
+         * @returns {number[][]|undefined}
+         */
         function buildMatrix() {
             const $arrayWrapper = $(".array-wrapper");
             var $rowsInput = $("#rows");
@@ -483,7 +659,14 @@ $(document).ready(() => {
             return matrix;
         }
 
-        // Character Array Builder Helper Function
+
+        /**
+         * Character Array Builder Helper Function
+         * 
+         * @param {"infix"|"postfix"} notation 
+         * @param {string[]} tokens 
+         * @returns {void}
+         */
         function loadChars(notation, tokens) {
             const input = $("#character-input").val().trim();
             const $charsContainer = $(".input-wrapper .characters-wrap .characters");
@@ -520,7 +703,16 @@ $(document).ready(() => {
             $("#character-input").val("");
         }
 
-        // 1D Array Validator Utility Function
+
+        /**
+         * 1D Array Validator Utility Function
+         * 
+         * @param {number[]} array 
+         * @param {string|undefined} element 
+         * @param {string|undefined} index 
+         * @param {"merge"|"slice"} func 
+         * @returns {boolean|undefined}
+         */
         function oneDArrayValidator(array, element, index, func) {
             if (!array.length) {
                 showPopUp(
@@ -580,7 +772,16 @@ $(document).ready(() => {
             return true;
         }
 
-        // 2D Array Validator Utility Function
+
+        /**
+         * 2D Array Validator Utility Function
+         * 
+         * @param {number[][]} matrix 
+         * @param {string|undefined} element 
+         * @param {string|undefined} rowIndex 
+         * @param {string|undefined} columnIndex 
+         * @returns {boolean|undefined}
+         */
         function twoDArrayValidator(matrix, element, rowIndex, columnIndex) {
             const checkIndex = (value, max, type) => {
                 if (value === "" || +value >= max) {
@@ -631,6 +832,7 @@ $(document).ready(() => {
             return true;
         }
 
+
         // Linear Search
         if ($(".linear-search-wrapper").length) {
             let array = [];
@@ -644,7 +846,12 @@ $(document).ready(() => {
                 index = 0;
             });
 
-            // Linear Search Step Helper Function
+
+            /**
+             * Linear Search Step Helper Function
+             * 
+             * @returns {void}
+             */
             function linearSearchStep() {
                 var $arrayItems = $(".array-wrapper .array-item");
                 target = +$("#ls-target").val().trim();
@@ -718,6 +925,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Binary Search
         else if ($(".binary-search-wrapper").length) {
             let array = [];
@@ -737,7 +945,12 @@ $(document).ready(() => {
                 high = array.length - 1;
             });
 
-            // Binary Search Helper Function
+
+            /**
+             * Binary Search Helper Function
+             * 
+             * @returns {void}
+             */
             function binarySearchStep() {
                 if (searchComplete) return;
 
@@ -832,6 +1045,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Bubble Sort
         else if ($(".bubble-sort-wrapper").length) {
             let array = [];
@@ -852,7 +1066,12 @@ $(document).ready(() => {
                 if (interval) clearInterval(interval);
             });
 
-            // Bubble Sort Step Helper Function
+
+            /**
+             * Bubble Sort Step Helper Function
+             * 
+             * @returns {void}
+             */
             function bubbleSortStep() {
                 if (sorted) return;
 
@@ -901,6 +1120,7 @@ $(document).ready(() => {
                 }
             }
 
+
             // Bubble Sort Step
             $("#b-sort-step").on("click", bubbleSortStep);
 
@@ -941,6 +1161,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Selection Sort
         else if ($(".selection-sort-wrapper").length) {
             let array = [];
@@ -965,7 +1186,12 @@ $(document).ready(() => {
                 minIndex = 0;
             });
 
-            // Selection Sort Step Helper Function
+
+            /**
+             * Selection Sort Step Helper Function
+             * 
+             * @returns {void}
+             */
             function selectionSortStep() {
                 if (sorted) return;
 
@@ -1067,6 +1293,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Insertion Sort
         else if ($(".insertion-sort-wrapper").length) {
             let array = [];
@@ -1089,7 +1316,12 @@ $(document).ready(() => {
                 sorted = false;
             });
 
-            // Insertion Sort Step Helper Function
+
+            /**
+             * Insertion Sort Step Helper Function
+             * 
+             * @returns {void}
+             */
             function insertionSortStep() {
                 if (sorted) return;
 
@@ -1187,6 +1419,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Merge Sort
         else if ($(".merge-sort-wrapper").length) {
             let array = [];
@@ -1195,7 +1428,14 @@ $(document).ready(() => {
             let sorted = false;
             let interval = null;
 
-            // Merge Sort Steps Planner Helper Function
+
+            /**
+             * Merge Sort Steps Planner Helper Function
+             * 
+             * @param {number} left 
+             * @param {number} right 
+             * @returns {void}
+             */
             function planMergeSort(left, right) {
                 if (left >= right) return;
 
@@ -1218,7 +1458,12 @@ $(document).ready(() => {
                 if (array.length > 0) planMergeSort(0, array.length - 1);
             });
 
-            // Merge Sort Step Helper Function
+
+            /**
+             * Merge Sort Step Helper Function
+             * 
+             * @returns {void}
+             */
             function mergeSortStep() {
                 if (sorted) return;
 
@@ -1312,6 +1557,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Quick Sort
         else if ($(".quick-sort-wrapper").length) {
             let array = [];
@@ -1321,7 +1567,15 @@ $(document).ready(() => {
             let passInterval = null;
             let interval = null;
 
-            // Quick Sort Steps Planner Helper Function
+
+            /**
+             * Quick Sort Steps Planner Helper Function
+             * 
+             * @param {number[]} arr 
+             * @param {number} left 
+             * @param {number} right 
+             * @returns {void}
+             */
             function planQuickSort(arr, left, right) {
                 if (left > right) return;
 
@@ -1363,7 +1617,12 @@ $(document).ready(() => {
                 if (array.length > 0) planQuickSort([...array], 0, array.length - 1);
             });
 
-            // Quick Sort Step Helper Function
+
+            /**
+             * Quick Sort Step Helper Function
+             * 
+             * @returns {void}
+             */
             function quickSortStep() {
                 if (sorted) return;
 
@@ -1498,6 +1757,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Infix To Postfix Algorithm
         else if ($(".infix-to-postfix-wrapper").length) {
             let tokens = [];
@@ -1514,7 +1774,12 @@ $(document).ready(() => {
                 if (interval) clearInterval(interval);
             });
 
-            // Infix To Postfix Step Helper Function
+
+            /**
+             * Infix To Postfix Step Helper Function
+             * 
+             * @returns {void}
+             */
             function infixToPosfixStep() {
                 var token = tokens[currentIndex];
                 var $outputContainer = $(".output-wrapper .characters");
@@ -1647,6 +1912,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Postfix Evaluation
         else if ($(".postfix-evaluation-wrapper").length) {
             let tokens = [];
@@ -1663,7 +1929,12 @@ $(document).ready(() => {
                 if (interval) clearInterval(interval);
             });
 
-            // Postfix Evaluation Step Helper Function
+
+            /**
+             * Postfix Evaluation Step Helper Function
+             * 
+             * @returns {void}
+             */
             function postfixEvaluationStep() {
                 const $inputChars = $(".input-wrapper .characters .char");
                 const $stackContainer = $(".stack-wrap .characters");
@@ -1788,6 +2059,7 @@ $(document).ready(() => {
             });
         }
 
+
         // 1D Arrays
         else if ($(".one-d-arrays-wrapper").length) {
             let array = [];
@@ -1795,7 +2067,12 @@ $(document).ready(() => {
             let timers = [];
             const $outputWrap = $(".output-wrap");
 
-            // 1D Array Soft Reset Utility Function
+
+            /**
+             * 1D Array Soft Reset Utility Function
+             * 
+             * @returns {void}
+             */
             function softReset() {
                 isBusy = false;
                 timers.forEach(timer => clearTimeout(timer));
@@ -2485,6 +2762,7 @@ $(document).ready(() => {
             });
         }
 
+
         // 2D Arrays
         else if ($(".two-d-arrays-wrapper").length) {
             let matrix = [];
@@ -2492,7 +2770,12 @@ $(document).ready(() => {
             let timers = [];
             const $outputWrap = $(".output-wrap");
 
-            // 2D Array Soft Reset Utility Function
+
+            /**
+             * 2D Array Soft Reset Utility Function
+             * 
+             * @returns {void}
+             */
             function softReset() {
                 isBusy = false;
                 timers.forEach(timer => clearTimeout(timer));
@@ -2619,6 +2902,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Linked Lists
         else if ($(".linked-lists-wrapper").length) {
             const $listTypes = $(".list-types .btn");
@@ -2628,7 +2912,12 @@ $(document).ready(() => {
             let timers = [];
             let listType = null;
 
-            // Linked List Soft Reset
+
+            /**
+             * Linked List Soft Reset
+             * 
+             * @returns {void}
+             */
             function softReset() {
                 isBusy = false;
                 timers.forEach(timer => clearTimeout(timer));
@@ -2636,7 +2925,12 @@ $(document).ready(() => {
                 $(".array-wrapper .array-item").removeClass("active match");
             }
 
-            // Render An Arrow From Last Element To First
+
+            /**
+             * Render An Arrow From Last Element To First
+             * 
+             * @returns {void}
+             */
             function drawLoopArrow() {
                 const $nodes = $(".list-node");
                 const $svg = $(".links");
@@ -2711,7 +3005,13 @@ $(document).ready(() => {
                 $svg[0].appendChild(path);
             }
 
-            // Update Arrows For Different List Types
+
+            /**
+             * Update Arrows For Different List Types
+             * 
+             * @param {"SLL"|"DLL"|"CSLL"|"CDLL"} listType 
+             * @returns {void}
+             */
             function updateArrows(listType) {
                 const $arrows = $(".list-wrapper i");
                 if (!$arrows.length) {
@@ -2730,7 +3030,15 @@ $(document).ready(() => {
                 drawLoopArrow();
             }
 
-            // Linked List Validator
+
+            /**
+             * Linked List Validator
+             * 
+             * @param {string|undefined} element 
+             * @param {string|undefined} index 
+             * @param {"insert"|"delete"} func_type 
+             * @returns {boolean|undefined}
+             */
             function linkedListValidator(element, index, func_type) {
                 if (func_type === "delete" && list.length <= 0) {
                     showPopUp(
@@ -2790,7 +3098,13 @@ $(document).ready(() => {
                 return true;
             }
 
-            // Linked List Insert Element Helper Function
+
+            /**
+             * Linked List Insert Element Helper Function
+             * 
+             * @param {string} index 
+             * @returns {void}
+             */
             function insertElement(index) {
                 const element = $("#array-element").val().trim();
                 if (isBusy || !linkedListValidator(
@@ -2824,7 +3138,13 @@ $(document).ready(() => {
                 $("#array-index").val("");
             }
 
-            // Linked List Delete Element Helper Function
+
+            /**
+             * Linked List Delete Element Helper Function
+             * 
+             * @param {string} index 
+             * @returns {void}
+             */
             function deleteElement(index) {
                 if (isBusy || !linkedListValidator(
                     undefined,
@@ -2946,7 +3266,6 @@ $(document).ready(() => {
                     }, index * 500);
                     timers.push(timer);
                 });
-
             });
 
             // Push An Element At The Begining
@@ -2973,6 +3292,7 @@ $(document).ready(() => {
                 deleteElement(index);
             });
         }
+
 
         // Stacks
         else if ($(".stacks-wrapper").length) {
@@ -3071,6 +3391,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Queues
         else if ($(".queues-wrapper").length) {
             let queue = [];
@@ -3168,6 +3489,7 @@ $(document).ready(() => {
             });
         }
 
+
         // Trees
         else if ($(".trees-wrapper").length) {
             let isBusy = false;
@@ -3187,7 +3509,14 @@ $(document).ready(() => {
                 }
             };
 
-            // Inorder Traversal Helper Function
+
+            /**
+             * Inorder Traversal Helper Function
+             * 
+             * @param {{node: number, left?: number, right?:number} | null} node 
+             * @param {number[]} [order=[]] 
+             * @returns {number[]}
+             */
             function inorder(node, order = []) {
                 if (!node) return order;
                 if (node.left) inorder(node.left, order);
@@ -3196,7 +3525,14 @@ $(document).ready(() => {
                 return order;
             }
 
-            // Preorder Traversal Helper Function
+
+            /**
+             * Preorder Traversal Helper Function
+             * 
+             * @param {{node: number, left?: number, right?:number} | null} node 
+             * @param {number[]} [order=[]] 
+             * @returns {number[]}
+             */
             function preorder(node, order = []) {
                 if (!node) return order;
                 order.push(node.node);
@@ -3205,7 +3541,14 @@ $(document).ready(() => {
                 return order;
             }
 
-            // Postorder Traversal Helper Function
+
+            /**
+             * Postorder Traversal Helper Function
+             * 
+             * @param {{node: number, left?: number, right?:number} | null} node 
+             * @param {number[]} [order=[]] 
+             * @returns {number[]}
+             */
             function postorder(node, order = []) {
                 if (!node) return order;
                 if (node.left) postorder(node.left, order);
@@ -3214,14 +3557,20 @@ $(document).ready(() => {
                 return order;
             }
 
-            // Traverse Nodes Helper Function
+
+            /**
+             * Traverse Nodes Helper Function
+             * 
+             * @param {number[]} order 
+             * @returns {void}
+             */
             function traverseNodes(order) {
                 if (isBusy) return;
                 isBusy = true;
 
                 timers.forEach(timer => clearTimeout(timer));
                 timers = [];
-                
+
                 let delay = 0;
                 $(".tree-node").removeClass("active");
 
@@ -3258,4 +3607,272 @@ $(document).ready(() => {
             $("#postorder").on("click", () => traverseNodes(postorder(tree)));
         }
     });
+
+
+    // Exam
+    if ($("#exam-wrapper").length) {
+        const $questionElement = $("#question");
+        const $optionElements = $(".option");
+        const $questionNumbers = $(".question-no");
+        const $countdown = $(".countdown");
+
+        const marks = [];
+        const selectedOptions = {};
+        let submit = true;
+        let interval = null;
+
+        /**
+         * Render A Single Question
+         * 
+         * @param {{question: string, answer: string, options: string[]}} questionObject 
+         * @param {number} index 
+         * @returns {void}
+         */
+        function loadQuestion(questionObject, index) {
+            const question = questionObject.question;
+            const answer = questionObject.answer;
+            const options = questionObject.options;
+
+            $questionElement.text(`${index + 1}. ${question}`);
+
+            $optionElements.each((idx, option) => {
+                var $option = $(option);
+                $option.text(options[idx]);
+
+                if (selectedOptions.hasOwnProperty(index)) {
+                    $optionElements.eq(selectedOptions[index]).addClass("chosen");
+                }
+
+                $option.off("click").on("click", () => {
+                    selectedOptions[index] = idx;
+                    $optionElements.each(
+                        (idx, option) => $(option).removeClass("chosen")
+                    );
+
+                    $option.addClass("chosen");
+                    $questionNumbers.eq(index).addClass("answered");
+
+                    if ($option.text() == answer) marks[index] = 1;
+                    else marks[index] = 0;
+                });
+            });
+        }
+
+        /**
+         * Submit Exam Helper Function
+         * 
+         * @returns {void}
+         */
+        function submitExam() {
+            const score = marks.reduce((a, b) => a + b, 0);
+
+            if (submit) {
+                $.ajax({
+                    url: "../../Templates/Ajax/SubmitExam.php",
+                    method: "POST",
+                    data: { score: score },
+                    dataType: "json",
+                    success: (response) => {
+                        if (response.status === "success") {
+                            showPopUp(
+                                "success",
+                                response.message,
+                                `Your score is ${score}`,
+                            );
+
+                            $(".question-wrap").html("");
+                            $questionNumbers.each((idx, question) => {
+                                $(question).off("click");
+                                $(question).removeClass("active answered");
+                            });
+                            submit = false;
+                            $countdown.removeClass("low").html("00:00");
+                            if (interval) clearInterval(interval);
+                        }
+                    },
+                    error: () => {
+                        showPopUp(
+                            "error",
+                            "OOPS!",
+                            "Server Error. Try Again"
+                        );
+                    }
+                });
+            } else {
+                showPopUp(
+                    "error",
+                    "No Questions Loaded",
+                    "Reload page to load new exam"
+                );
+            }
+        }
+
+        
+        // Get The Exam Questions 
+        $.getJSON("../../Templates/Ajax/GetQuestions.php")
+            .done((questions) => {
+                if (questions.length < 20) {
+                    $(".card-body").html("");
+                    showPopUp(
+                        "error",
+                        "Not Enough Questions!",
+                        "At least 20 questions should be added for a test"
+                    );
+                    return;
+                }
+
+                questions.forEach(question => {
+                    question.options = Object.values(question)
+                        .slice(2, 6)
+                        .sort(() => Math.random() - 0.5);
+                });
+                loadQuestion(questions[0], 0);
+                $(".question-no:first").addClass("active");
+
+                $questionNumbers.on("click", (event) => {
+                    var index = $questionNumbers.index(event.currentTarget);
+
+                    $questionNumbers.removeClass("active");
+                    $optionElements.removeClass("chosen");
+                    $(event.currentTarget).addClass("active");
+
+                    loadQuestion(questions[index], index);
+                });
+
+                let timeLeft = 120;
+
+                interval = setInterval(() => {
+                    const minutes = Math.floor(timeLeft / 60).toString().padStart(2, "0");
+                    const seconds = (timeLeft % 60).toString().padStart(2, "0");
+
+                    $countdown.text(`${minutes}:${seconds}`);
+
+                    if (timeLeft <= 10) {
+                        $countdown.addClass("low");
+
+                        if (timeLeft <= 0) {
+                            clearInterval(interval);
+
+                            showPopUp(
+                                "error",
+                                "Time's Up!",
+                                "Time is over. Submit Exam.",
+                                null,
+                                false
+                            )
+                                .then((result) => {
+                                    if (
+                                        result.isDismissed &&
+                                        result.dismiss === Swal.DismissReason.cancel
+                                    ) submitExam();
+                                });
+                        }
+                    }
+
+                    timeLeft--;
+                }, 1000);
+            })
+            .fail(() => console.error("Failed to load questions"));
+
+        // Submit Exam
+        $("#submit-exam").on("click", submitExam);
+    }
+
+
+    // Chat
+    if ($(".chat-container").length) {
+        const $contacts = $(".contact");
+        const $sendMessage = $("#send-message");
+        const $chat = $("#chat");
+        var receiver = null;
+
+        // Select Receiver 
+        $contacts.each((index, contact) => {
+            var $contact = $(contact);
+
+            $contact.on("click", () => {
+                $contacts.each((idx, item) => {
+                    $(item).removeClass("active");
+                });
+
+                $contact.addClass("active");
+                receiver = $contact.data("receiver");
+
+                // Get Messsages
+                $.ajax({
+                    url: "../../Templates/Ajax/GetMessages.php",
+                    method: "POST",
+                    data: { contact: receiver },
+                    dataType: "json",
+                    success: (response) => {
+                        if (response.status === "success") {
+                            $chat.html("");
+                            let messages = response.messages;
+
+                            messages.forEach(message => {
+                                var $message = $("<p></p>");
+                                var messageClass = receiver == message.receiver
+                                    ? "send"
+                                    : "received";
+
+                                $message.text(message.message);
+                                $message.addClass(messageClass);
+
+                                $chat.append($message);
+                                $(".chat-wrap").scrollTop($chat.prop("scrollHeight"));
+                            });
+                        }
+                    },
+                    error: () => {
+                        showPopUp(
+                            "error",
+                            "Something Went Wrong",
+                            "Couldn't load messages"
+                        );
+                    }
+                });
+            });
+        });
+
+        // Send Message
+        $sendMessage.on("click", () => {
+            var message = $("#message").val();
+
+            if (!receiver) {
+                showPopUp(
+                    "error",
+                    "No Recipient",
+                    "Select a recipient to send message"
+                );
+                return;
+            }
+
+            if (!message) return;
+
+            $.ajax({
+                url: "../../Templates/Ajax/SendMessage.php",
+                method: "POST",
+                data: {
+                    receiver: receiver,
+                    message: message
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response.status === "success") {
+                        let $message = $("<p></p>").addClass("send").text(message);
+                        $chat.append($message);
+                        $(".chat-wrap").scrollTop($chat.prop("scrollHeight"));
+                        $("#message").val("");
+                    }
+                },
+                error: () => {
+                    showPopUp(
+                        "error",
+                        "OOPS!",
+                        "Server Error. Try Again"
+                    );
+                }
+            });
+        });
+    }
 });
